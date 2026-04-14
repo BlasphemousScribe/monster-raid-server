@@ -30,6 +30,10 @@ def bud():
     "part_list":STATE["part_list"],"arena_battle_pt":STATE["arena_battle_pt"],
     "tower_step":STATE["tower_step"]}
 
+@app.before_request
+def log_request():
+    log.info(f">> {request.method} {request.path} | {request.get_data()[:200]}")
+
 @app.route("/", methods=["GET","HEAD"])
 def health(): return "Monster Raid Server OK", 200
 
@@ -339,7 +343,7 @@ def coupon(): return ok({"gold":50000,"gem":50})
 
 @app.errorhandler(404)
 def not_found(e):
-    log.warning(f"Unknown route: {request.path}")
+    log.warning(f"404 Unknown route: {request.path} | Method: {request.method} | Data: {request.get_data()[:200]}")
     return ok({})
 
 if __name__=="__main__":
