@@ -30,6 +30,9 @@ def bud():
     "part_list":STATE["part_list"],"arena_battle_pt":STATE["arena_battle_pt"],
     "tower_step":STATE["tower_step"]}
 
+@app.route("/", methods=["GET","HEAD"])
+def health(): return "Monster Raid Server OK", 200
+
 @app.route("/version", methods=["GET","POST"])
 def version():
     return ok({"force_update":0,"cur_ver":57,"notice":0,"notice_main_url":"","notice_err_url":"","cdn_url":"","patch":0})
@@ -92,7 +95,9 @@ def dungeon_clear():
 def sp_dungeon_list(): return ok({"sp_dungeon_list":[]})
 
 @app.route("/spDungeonEnt", methods=["GET","POST"])
-def sp_dungeon_ent(): return dungeon_ent()
+def sp_dungeon_ent():
+    STATE["stamina"]=max(0,STATE["stamina"]-int(request.form.get("stamina",5)))
+    return ok({"stamina":STATE["stamina"]})
 
 @app.route("/battleContinue", methods=["GET","POST"])
 def battle_continue(): return ok({"gem":STATE["gem"]})
@@ -339,4 +344,4 @@ def not_found(e):
 
 if __name__=="__main__":
     port=int(os.environ.get("PORT",10000))
-    app.run(host="0.0.0.0",port=port)
+    app.run(host="0.0.0.0",port=port,debug=False)
