@@ -3,5 +3,5 @@ services:
     name: monster-raid-server
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT --worker-class sync --timeout 120 "server:Handler"
+    startCommand: python server.py
     plan: free
